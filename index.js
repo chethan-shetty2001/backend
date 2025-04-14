@@ -1,12 +1,12 @@
 import express from "express";
 const app = express();
 import dotenv from "dotenv";
-import { connectDB } from "./src/helper/dbConnection.js";
+import { connectDB } from "./src/helper/dbCoonection.js";
 import routes from "./route.js";
 dotenv.config();
 
-app.use(express.json())
-app.use(express.urlencoded({extended:true}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 connectDB();
 routes(app);
