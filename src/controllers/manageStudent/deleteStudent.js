@@ -6,43 +6,56 @@ import{RESPONSE} from "../../config/global.js";
 import { STATE } from "../../config/constant.js";
 const router = Router();
 
-export default router.get("/", async (req, res) => {
+export default router.delete("/", async (req, res) => {
   try {
    
+    let student_id=req.query.student_id;
 
-    // if(!name || name==undefined) {
-    //   return send(res,setErrMsg(RESPONSE.MANDATORY,"name"));
+    if(!student_id || student_id==undefined) {
+      return send(res,setErrMsg(RESPONSE.MANDATORY,"student_id"));
     // //   return res.send({code: "201",message: "name is mandatory"});
-    // }
+     }
 
-// find method
-//     let studentData=await studentModel.find(
-//         {
-//         isactive: STATE.ACTIVE,
-//     },
+// findOne method
+    let studentData=await studentModel.findOne(
+        {
+            _id: student_id,
+        isactive: STATE.ACTIVE,
+    },
     
 // {
 //     isactive:0,
 //     __v:0,
-// });
+);
 
 // aggregate method
-let studentData=await studentModel.aggregate([
-  {
-    $match:{isactive:STATE.ACTIVE},
-  },
+// let studentData=await studentModel.aggregate([
+//   {
+//     $match:{isactive:STATE.ACTIVE},
+//   },
 
-  {
-    $project:{
-      isactive:0,
-      __v:0,
-    },
-  },
-]);
+//   {
+//     $project:{
+//       isactive:0,
+//       __v:0,
+//     },
+//   },
+// ]);
 
-    if(studentData.length==0){
+    if(studentData ==null){
         return send(res,setErrMsg(RESPONSE.NOT_FOUND,"student data"));  
     }
+
+
+    await studentModel.updateOne(
+        {
+            _id:student_id,
+            isactive:STATE.ACTIVE,
+        },
+        { $set:{isactive:STATE.INACTIVE}}
+    );
+
+
     // if(!email || email==undefined) {
     //   return send(res,setErrMsg(RESPONSE.MANDATORY,"email"));
     // }
@@ -80,9 +93,9 @@ let studentData=await studentModel.aggregate([
     //   email:email,
     //   rollno:rollno,
     // });
-    return send(res,RESPONSE.SUCESSS, studentData);
+    return send(res,RESPONSE.SUCESSS);
   } catch (error) {
-    console.log("list student",error);
+    console.log("delete student ",error);
     return send(res,RESPONSE.UNKNOWN_ERR);
   }
 });

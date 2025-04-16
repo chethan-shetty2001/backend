@@ -52,7 +52,7 @@ export default router.post("/", async (req, res) => {
     });
     return send(res,RESPONSE.SUCESSS);
   } catch (error) {
-    console.log(error);
+    console.log("create student",error);
     return send(res,RESPONSE.UNKNOWN_ERR);
   }
 });
